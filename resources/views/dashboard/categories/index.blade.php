@@ -10,6 +10,30 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
+            <form method="get" action="{{URL::current()}}">
+                <div class="mb-3 row">
+                    <div class="mb-3 col-sm-6 col-md-8 row">
+                        <div class="mb-3 col-4">
+                            <x-dashboard.form.input name="name" :value="request('name')" placeholder="Filter By Name"/>
+                        </div>
+                        <div class="mb-3 col-2">
+                            <select id="status" class="form-control" name="status">
+                                <option value="">All</option>
+                                <option value="Active" @selected(request('status') == "Active") >Active</option>
+                                <option value="Inactive" @selected(request('status') == "Inactive") >Inactive</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3 col-md-1">
+                            <button type="submit" class="btn btn-primary w-100">Filter</button>
+                        </div>
+                        <div class="col-sm-3 col-md-2">
+                            @if(request('name'))
+                                <a href="{{URL::current()}}" class="btn btn-secondary w-100">Remove Filter</a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </form>
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -27,7 +51,7 @@
                 @forelse($data['categories'] as $key => $category)
                     <tr>
                         <td class="text-center">{{++$key}}</td>
-                        <td>{{asset('assets\images\\'.$category['dashboard_image'])}}<img src="{{asset('assets/images/'.$category['dashboard_image'])}}" ></td>
+                        <td class="center"><img src="{{asset('assets/images/'.$category['dashboard_image'])}}" class="img-lg img-circle"></td>
                         <td>{{$category['name']}}</td>
                         <td>{{$category['parent_id']}}</td>
                         <td>{{$category['slug']}}</td>
@@ -78,13 +102,8 @@
         </div>
         <!-- /.card-body -->
         <div class="card-footer clearfix">
-            <ul class="pagination pagination-sm m-0 float-right">
-                <li class="page-item"><a class="page-link" href="#">«</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">»</a></li>
-            </ul>
+            {{ $data['categories']->withQueryString()->appends(['search' => 1])->links() }}
+
         </div>
     </div>
     <!-- /.content -->

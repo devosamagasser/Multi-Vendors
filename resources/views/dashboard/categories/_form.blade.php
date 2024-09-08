@@ -2,29 +2,25 @@
 
     <div class="card-body">
         <div class="custom-control custom-radio mb-3">
-            <span>
-                <input @class(['custom-control-input custom-control-input-danger','is-invalid'=>$errors->has('status')]) type="radio" id="Inactive"  name="status" value="Inactive" @checked(old('status',$data['category']['status']) == "Inactive")>
-                <label for="Inactive" class="custom-control-label">Inactive</label>
-            </span>
-            <span class="ml-5">
-                <input @class(['custom-control-input custom-control-input-success','is-invalid'=>$errors->has('status')]) type="radio" id="Active" name="status" value="Active" @checked(old('status',$data['category']['status']) == "Active")>
-                <label for="Active" class="custom-control-label">Active</label>
-                @error('status')
-                <div class="text-danger invalid-feedback">
-                    {{$message}}
-                </div>
-                @enderror
-            </span>
+{{--            <span>--}}
+{{--                <input @class(['custom-control-input custom-control-input-danger','is-invalid'=>$errors->has('status')]) type="radio" id="Inactive"  name="status" value="Inactive" @checked(old('status',$data['category']['status']) == "Inactive")>--}}
+{{--                <label for="Inactive" class="custom-control-label">Inactive</label>--}}
+{{--            </span>--}}
+{{--            <span class="ml-5">--}}
+{{--                <input @class(['custom-control-input custom-control-input-success','is-invalid'=>$errors->has('status')]) type="radio" id="Active" name="status" value="Active" @checked(old('status',$data['category']['status']) == "Active")>--}}
+{{--                <label for="Active" class="custom-control-label">Active</label>--}}
+{{--                @error('status')--}}
+{{--                <div class="text-danger invalid-feedback">--}}
+{{--                    {{$message}}--}}
+{{--                </div>--}}
+{{--                @enderror--}}
+{{--            </span>--}}
+            <x-dashboard.form.radio name="status" :options="['Active'=>['reference'=>'Active','status'=>'success'],'Inactive'=>['reference'=>'Inactive','status'=>'danger']]" :value="$data['category']['status']" />
         </div>
 
         <div class="form-group">
             <label for="Name">Category Name</label>
-            <input type="text" @class(['form-control','is-invalid'=>$errors->has('name')])  name="name" value="{{old('status',$data['category']['name'])}}" id="Name" placeholder="CtegoryName">
-            @error('name')
-            <div class="text-danger invalid-feedback">
-                {{$message}}
-            </div>
-            @enderror
+            <x-dashboard.form.input name="name" type="text" label="Category Name"  placeholder="Category Name" :value="$data['category']['name']" />
         </div>
         <div class="form-group">
             <label for="parent" class="form-label">Parent</label>
@@ -51,8 +47,8 @@
         @enderror
         <div class="form-group">
             <div class="custom-file">
-                <label class="custom-file-label" for="exampleInputFile">Cover</label>
-                <input type="file" @class(['custom-file-input','is-invalid'=>$errors->has('image')]) class="" id="exampleInputFile" name="image">
+                <label class="custom-file-label" for="image">Cover</label>
+                <x-dashboard.form.input name="image" type="file" class="custom-file-input"/>
                 @error('image')
                 <div class="text-danger invalid-feedback">
                     {{$message}}

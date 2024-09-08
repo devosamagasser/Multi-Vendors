@@ -19,7 +19,12 @@ class CategoriesRepository extends Repository implements CategoriesInterface
 
     public function index()
     {
-        $categories = $this->mainModel::get();
+        $query = $this->mainModel::query();
+        if($name = request()->query('name'))
+            $query->where('name','LIKE',"%$name%");
+        if($status = request()->query('status'))
+            $query->whereStatus($status);
+        $categories = $query->paginate(1);
         return $this->customView('index','Data',['categories' => $categories]);
     }
 
