@@ -1,37 +1,27 @@
 <?php
 
 namespace App\Repositories\Dashboard;
-use App\Interfaces\Dashboard\CategoriesInterface;
-
-use App\Models\Category;
+use App\Interfaces\Dashboard\ProductsInterface;
+use App\Models\Product;
 use App\Traits\ImagesTrait;
-use Illuminate\Support\Str;
 
-class CategoriesRepository extends Repository implements CategoriesInterface
+class ProductsRepository  extends Repository implements ProductsInterface
 {
     use ImagesTrait;
 
-    public function __construct(Category $category)
+    public function __construct(Product $model)
     {
-        $this->mainModel = $category;
+        $this->mainModel = $model;
         $this->endPoint = 'dashboard';
         $this->mainRoute = $this->endPoint .'.'. $this->mainModel::SECTION ;
     }
 
     public function index()
     {
-        $categories = $this->mainModel::with(['parent'])
-            /**leftJoin('categories as parent','parent.id','=','categories.parent_id')
-            ->select(['categories.*','parent.name as parent_name'])
-            ->selectRaw("(select count(*) from products where products.category_id = categories.id) as products_count")*/
-            ->withCount(['products'=>function ($query) {
-                $query->whereStatus('active');
-            }])
-            ->withCount('children')
-            ->filter(request()->query())->paginate(3);
+//        $categories = $this->mainModel::->paginate(3);
+        $products = $this->mainModel::with(['store','category'])->filter(request()->query())->paginate(3);
 
-        //scope -> latest() {order by name}
-        return $this->customView('index','Data',['categories' => $categories]);
+        return $this->customView('index','Data',['products' => $products]);
     }
 
     public function create()
@@ -45,7 +35,7 @@ class CategoriesRepository extends Repository implements CategoriesInterface
     public function store($request)
     {
         $request->merge([
-           'slug' => Str::slug($request->name)
+            'slug' => Str::slug($request->name)
         ]);
         $data = $request->except('image');
         $data['image'] = ($request->hasFile('image')) ? $this->moveImage($request->file('image')) : null;
@@ -55,13 +45,7 @@ class CategoriesRepository extends Repository implements CategoriesInterface
 
     public function show($category)
     {
-//        $categoryData = $category::with(['parent','children','products'])
-//            ->withCount(['products'=>function ($query) {
-//                $query->whereStatus('active');
-//            }])
-//            ->withCount('children');
-        $products = $category->products()->paginate(3);
-        return $this->customView('show',$category->name,['category' => $category,'products' => $products]);
+        // TODO: Implement show() method.
     }
 
     public function edit($category)

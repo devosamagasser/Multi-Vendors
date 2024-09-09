@@ -5,7 +5,10 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">
-                <a href="{{route('dashboard.'.$data['section'].'.create')}}" class="btn btn-lg text-primary "><i class="fa fa-plus-circle"></i> Add Category</a>
+                <a href="{{route('dashboard.'.$data['section'].'.create')}}" class="btn btn-lg text-primary "><i class="fa fa-plus-circle"></i> New</a>
+            </h3>
+            <h3 class="card-title">
+                <a href="{{route('dashboard.'.$data['section'].'.trash')}}" class="btn btn-lg text-danger "><i class="fa fa-trash"></i> Trash</a>
             </h3>
         </div>
         <!-- /.card-header -->
@@ -43,6 +46,7 @@
                     <th class="text-center">Parent</th>
                     <th class="text-center">Slug</th>
                     <th class="text-center">description</th>
+                    <th class="text-center">products_count</th>
                     <th class="text-center">status</th>
                     <th class="text-center">Control</th>
                 </tr>
@@ -52,10 +56,11 @@
                     <tr>
                         <td class="text-center">{{++$key}}</td>
                         <td class="center"><img src="{{asset('assets/images/'.$category['dashboard_image'])}}" class="img-lg img-circle"></td>
-                        <td>{{$category['name']}}</td>
-                        <td>{{$category['parent_id']}}</td>
+                        <td><a href="{{route('dashboard.'.$data['section'].'.show',$category['id'])}}" >{{$category['name']}}</a></td>
+                        <td>{{$category['parent']['name']}}</td>
                         <td>{{$category['slug']}}</td>
                         <td>{{$category['description']}}</td>
+                        <td>{{$category['products_count']}}</td>
                         <td>{{$category['status']}}</td>
                         <td>
                             <div class="d-flex row justify-content-lg-center">
@@ -94,7 +99,7 @@
                         </td>
                     </tr>
                 @empty
-                    <div class="alert alert-secondary text-light text-center">There is no Committees</div>
+                    <div class="alert alert-secondary text-light text-center">There is no Categories</div>
                 @endforelse
 
                 </tbody>

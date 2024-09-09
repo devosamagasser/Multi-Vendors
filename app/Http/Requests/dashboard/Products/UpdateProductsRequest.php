@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Http\Requests\dashboard\categories;
+namespace App\Http\Requests\Dashboard\Products;
 
-use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCategoryRequest extends FormRequest
+class UpdateProductsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,6 +21,8 @@ class StoreCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        return Category::rules();
+        return [
+            //
+        ];
     }
 }

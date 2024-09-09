@@ -3,19 +3,36 @@
 namespace App\Models;
 
 use App\Rules\FilterRules;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     public const SECTION = 'categories';
 
     protected $fillable = ['name','parent_id','slug','description','image','status'];
 //    protected $guarded = ['id','created_at','updated_at'];
 
     protected $appends = ['dashboard_image'];
+
+    public function parent()
+    {
+        return $this->belongsTo(static::class,'parent_id')->withDefault(['name'=>'-']);
+    }
+
+    public function children()
+    {
+        return $this->hasMany(static::class,'parent_id');
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class)->with('store');
+    }
 
     public function dashboardImage(): Attribute
     {
@@ -48,13 +65,17 @@ class Category extends Model
         ];
     }
 
-    public function messages()
+    public function scopeFilter (Builder $builder,array $filter)
     {
-//        return [
-//            'required' => ':Attribute deosn't enter',
-//            'name.required' => 'Please enter your name.',
-//            'name.max' => 'The name may not be greater than 255 characters.',
-//        ];
+        $builder->when($filter['name'] ?? false,function ($builder,$value){
+            $builder->where('categories.name','LIKE',"%{$value}%");
+        });
+
+        $builder->when($filter['status'] ?? false,function ($builder,$value){
+            $builder->where('categories.status',$value);
+        });
     }
+
+
 
 }

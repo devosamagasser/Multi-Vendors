@@ -2,7 +2,7 @@
 
 namespace App\Interfaces\Dashboard;
 
-interface CategoriesInterface
+interface ProductsInterface
 {
     /**
      * Display a listing of the resource.
