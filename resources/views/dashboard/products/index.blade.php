@@ -46,7 +46,6 @@
                     <th class="text-center">Slug</th>
                     <th class="text-center">description</th>
                     <th class="text-center">categories</th>
-                    <th class="text-center">store</th>
                     <th class="text-center">price</th>
                     <th class="text-center">status</th>
                     <th class="text-center">options</th>
@@ -62,9 +61,8 @@
                         <td class="center"><img src="{{asset('assets/images/'.$product['dashboard_image'])}}" class="img-lg img-circle"></td>
                         <td>{{$product['name']}}</td>
                         <td>{{$product['slug']}}</td>
-                        <td>{{$product['description']}}</td>
+                        <td><x-dashboard.model name="desc-{{$product['id']}}" status="primary" title="description" message="{{$product['description']}}" ></x-dashboard.model></td>
                         <td>{{$product['category']['name']}}</td>
-                        <td>{{$product['store']['name']}}</td>
                         <td>{{$product['price']}}</td>
                         <td>{{$product['status']}}</td>
                         <td>{{$product['options']}}</td>
@@ -73,9 +71,12 @@
                         <td>
                             <div class="d-flex row justify-content-lg-center">
                                 <a href="{{route('dashboard.'.$data['section'].'.edit',$product->id)}}" class="btn text-success "><i class="fa fa-edit"></i></a>
-                                <x-dashboard.model name="delete-{{$product['id']}}" status="danger" icon="fa fa-trash" :action="route('dashboard.'.$data['section'].'.destroy',$product['id'])" message="Are You Sure You Need To Delete {{$product->name}}" >
-                                    @method('delete')
-                                    <button type="submit" class="btn btn-primary">Yes , Delete</button>
+                                <x-dashboard.model name="delete-{{$product['id']}}" status="danger" icon="fa fa-trash" message="Are You Sure You Need To Delete {{$product->name}}" >
+                                    <form  action="{{route('dashboard.'.$data['section'].'.destroy',$product['id'])}}" method="post">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="submit" class="btn btn-primary">Yes , Delete</button>
+                                    </form>
                                 </x-dashboard.model>
                                 <!-- /.modal -->
                             </div>
@@ -90,7 +91,7 @@
         </div>
         <!-- /.card-body -->
         <div class="card-footer clearfix">
-            {{ $data['products']->withQueryString()->appends(['search' => 1])->links() }}
+            {{ $data['products']->withQueryString()->links() }}
         </div>
     </div>
     <!-- /.content -->

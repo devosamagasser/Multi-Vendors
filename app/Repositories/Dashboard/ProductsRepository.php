@@ -2,8 +2,13 @@
 
 namespace App\Repositories\Dashboard;
 use App\Interfaces\Dashboard\ProductsInterface;
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\Tag;
 use App\Traits\ImagesTrait;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductsRepository  extends Repository implements ProductsInterface
 {
@@ -26,47 +31,83 @@ class ProductsRepository  extends Repository implements ProductsInterface
 
     public function create()
     {
-        $categories = $this->mainModel::get();
-        $category = new Category();
-        $merged_data = ['category' => $category,'categories' => $categories];
-        return $this->customView('create','Add Category',$merged_data);
+        $categories = Category::select('id','name')->get();
+        $merged_data = ['product' => $this->mainModel,'categories' => $categories];
+        return $this->customView('create','Add Product',$merged_data);
     }
 
     public function store($request)
     {
         $request->merge([
-            'slug' => Str::slug($request->name)
+            'slug' => Str::slug($request->name),
+            'store_id' => Auth::user()->store_id
         ]);
-        $data = $request->except('image');
+        $data = $request->except('image','tags');
         $data['image'] = ($request->hasFile('image')) ? $this->moveImage($request->file('image')) : null;
-        $this->mainModel::create($data);
-        return $this->backHome('Category Created Successfully');
+        $tags = explode(',',$request->tags);
+
+        $savedTags = Tag::all();
+        DB::transaction(function ()use($data,$savedTags,$tags){
+            $product = $this->mainModel::create($data);
+            $tags_id = [];
+            foreach ($tags as $tag_name){
+                $slug = Str::slug($tag_name);
+                $tag = $savedTags->where('slug','=',$slug)->first();
+                if(!$tag){
+                    $tag = Tag::create([
+                        'name'=>$tag_name,
+                        'slug'=>$slug,
+                    ]);
+                }
+                $tags_id[] = $tag->id;
+            }
+            $product->tags()->sync($tags_id);
+        });
+        return $this->backHome('Product Created Successfully');
     }
 
-    public function show($category)
+    public function show($product)
     {
         // TODO: Implement show() method.
     }
 
-    public function edit($category)
+    public function edit($product)
     {
-        $categories = $this->mainModel::where('id','<>',$category->id)->where(function ($query) use($category) {
-            $query->whereNull('parent_id')->orWhere('parent_id','<>',$category->id);
-        })->get();
-
-        $merged_data = ['category' => $category,'categories' => $categories];
-        return $this->customView('edit','Edit Category',$merged_data);
+        $categories = Category::select('id','name')->get();
+        $merged_data = ['product' => $product,'categories' => $categories];
+        return $this->customView('edit','Update Product',$merged_data);
     }
 
-    public function update($request, $category)
+    public function update($request, $product)
     {
-        $data = $request->except('image');
-        $data['image'] = ($request->hasFile('image')) ? $this->updateImage($request->file('image'),$category->dashboard_image) : $category->image;
-        $category->update($data);
-        return $this->backHome('Category Updated Successfully');
+        $request->merge([
+            'slug' => Str::slug($request->name),
+        ]);
+        $data = $request->except('image','tags');
+        $data['image'] = ($request->hasFile('image')) ? $this->updateImage($request->file('image'),$product->dashboard_image) : $product->image;
+        $tags = explode(',',$request->tags);
+
+        $savedTags = Tag::all();
+        DB::transaction(function ()use($product,$data,$savedTags,$tags){
+            $product->update($data);
+            $tags_id = [];
+            foreach ($tags as $tag_name){
+                $slug = Str::slug($tag_name);
+                $tag = $savedTags->where('slug','=',$slug)->first();
+                if(!$tag){
+                    $tag = Tag::create([
+                        'name'=>$tag_name,
+                        'slug'=>$slug,
+                    ]);
+                }
+                $tags_id[] = $tag->id;
+            }
+            $product->tags()->sync($tags_id);
+        });
+        return $this->backHome('Product Updated Successfully');
     }
 
-    public function destroy($category)
+    public function destroy($product)
     {
         $category->delete();
         return $this->backHome('Category Deleted Successfully');
@@ -83,17 +124,17 @@ class ProductsRepository  extends Repository implements ProductsInterface
         return $this->customView('trash','Trashed Data',['categories' => $categories]);
     }
 
-    public function restore($request, $category)
+    public function restore($request, $product)
     {
-        $category = $this->mainModel::onlyTrashed()->findOrFail($category);
+        $category = $this->mainModel::onlyTrashed()->findOrFail($product);
         $category->restore();
 
         return $this->backTo($this->mainRoute.'.trash',['status'=>'done','body'=>'Category Restored Successfully']);
     }
 
-    public function kill($request, $category)
+    public function kill($request, $product)
     {
-        $category = $this->mainModel::onlyTrashed()->findOrFail($category);
+        $category = $this->mainModel::onlyTrashed()->findOrFail($product);
         $this->deleteImage($category->dashboard_image);
         $category->forceDelete();
 

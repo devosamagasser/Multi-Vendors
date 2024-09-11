@@ -12,8 +12,6 @@ use Illuminate\Http\Request;
 class ProductsController extends Controller
 {
 
-    private $interface;
-
     public function __construct(ProductsInterface $interface)
     {
         $this->interface = $interface;
@@ -47,33 +45,33 @@ class ProductsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $category)
+    public function show(Product $product)
     {
-        return $this->interface->show($category);
+        return $this->interface->show($product);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $category)
+    public function edit(Product $product)
     {
-        return $this->interface->edit($category);
+        return $this->interface->edit($product);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductsRequest $request, Product $category)
+    public function update(UpdateProductsRequest $request, Product $product)
     {
-        return $this->interface->update($request,$category);
+        return $this->interface->update($request,$product);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $category)
+    public function destroy(Product $product)
     {
-        return $this->interface->destroy($category);
+        return $this->interface->destroy($product);
     }
 
 
@@ -82,13 +80,13 @@ class ProductsController extends Controller
         return $this->interface->trash();
     }
 
-    public function restore(Request $request, $category)
+    public function restore(Request $request, $product)
     {
-        return $this->interface->restore($request,$category);
+        return $this->interface->restore($request,$product);
     }
 
-    public function kill(Request $request, $category)
+    public function kill(Request $request, $product)
     {
-        return $this->interface->kill($request,$category);
+        return $this->interface->kill($request,$product);
     }
 }

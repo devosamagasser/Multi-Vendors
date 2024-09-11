@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('store_id')->nullable()->after('phone')->constrained('stores')->cascadeOnDelete()
-            ;
+        Schema::create('product_tag', function (Blueprint $table) {
+            $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
+            $table->foreignId('tag_id')->constrained('tags')->cascadeOnDelete();
+            $table->primary(['product_id','tag_id']);
         });
     }
 
@@ -22,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('store_id');
-        });
+        Schema::dropIfExists('product_tag');
     }
 };

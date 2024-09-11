@@ -22,7 +22,13 @@ Route::namespace('\App\Http\Controllers\Dashboard\\')->group(function (){
     Route::group(['controller'=> ProductsController::class,'as'=>'products.','prefix'=>'products'],function () {
         Route::get('trash','trash')->name('trash');
         Route::put('{product}/restore','restore')->name('restore');
-        Route::delete('/{product}/kill','kill')->name('kill');
+        Route::delete('{product}/kill','kill')->name('kill');
     });
 
+    Route::group(['controller' => ProfileController::class ,'as'=>'profile.','prefix'=>'profile'],function (){
+        Route::get('index','index')->name('index');
+        Route::get('edit','edit')->name('edit');
+        Route::patch('update','update')->name('update');
+        Route::delete('destroy','destroy')->name('destroy');
+    });
 });

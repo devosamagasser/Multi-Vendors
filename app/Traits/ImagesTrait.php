@@ -13,7 +13,7 @@ trait ImagesTrait
     public function moveImage($file)
     {
         $name = time().'_'.$this->mainModel::SECTION.'.png';
-        $file->storeAs($this->endPoint.'/'.$this->mainModel::SECTION,$name,'images');
+        $file->storeAs($this->mainModel::SECTION,$name,'images');
         return $name;
     }
 

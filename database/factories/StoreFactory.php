@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,6 +24,7 @@ class StoreFactory extends Factory
             'description' => $this->faker->sentence(20),
             'cover' => $this->faker->imageUrl(300,300),
             'logo' => $this->faker->imageUrl(800,600),
+            'user_id' => $this->faker->unique()->randomElement(User::pluck('id')->toArray()),
         ];
     }
 }

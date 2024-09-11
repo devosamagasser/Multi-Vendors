@@ -34,10 +34,10 @@ class Category extends Model
         return $this->hasMany(Product::class)->with('store');
     }
 
-    public function dashboardImage(): Attribute
+    public function image(): Attribute
     {
         return Attribute::make(
-            get: fn () => 'dashboard\categories\\' . $this->image
+            get: fn () => 'categories\\' . $this->image
         );
     }
 

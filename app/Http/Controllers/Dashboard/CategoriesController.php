@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 
 class CategoriesController extends Controller
 {
-    private $interface;
 
     public function __construct(CategoriesInterface $interface)
     {

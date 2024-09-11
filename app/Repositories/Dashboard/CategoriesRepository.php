@@ -77,7 +77,7 @@ class CategoriesRepository extends Repository implements CategoriesInterface
     public function update($request, $category)
     {
         $data = $request->except('image');
-        $data['image'] = ($request->hasFile('image')) ? $this->updateImage($request->file('image'),$category->dashboard_image) : $category->image;
+        $data['image'] = ($request->hasFile('image')) ? $this->updateImage($request->file('image'),$category->image) : $category->image;
         $category->update($data);
         return $this->backHome('Category Updated Successfully');
     }
@@ -110,7 +110,7 @@ class CategoriesRepository extends Repository implements CategoriesInterface
     public function kill($request, $category)
     {
         $category = $this->mainModel::onlyTrashed()->findOrFail($category);
-        $this->deleteImage($category->dashboard_image);
+        $this->deleteImage($category->image);
         $category->forceDelete();
 
         return $this->backTo($this->mainRoute.'.trash',['status'=>'done','body'=>'Category Deleted Successfully']);

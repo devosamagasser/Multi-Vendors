@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Web\ProductsController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\HomeController;
+use \App\Http\Controllers\Web;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +17,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class,'index'])->name('home');
+
+Route::resource('products', ProductsController::class)
+    ->only(['index', 'show'])
+    ->parameters(['products' => 'product:slug']);
 
 
 

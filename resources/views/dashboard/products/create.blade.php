@@ -13,7 +13,7 @@
         </div>
         <form action="{{route('dashboard.'.$data['section'].'.store')}}" method="post" enctype="multipart/form-data">
             @csrf
-            @include('dashboard.categories._form')
+            @include('dashboard.'.$data['section'].'._form')
         </form>
     </div>
 @endsection

@@ -22,26 +22,26 @@ interface ProductsInterface
     /**
      * Display the specified resource.
      */
-    public function show($category);
+    public function show($product);
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($category);
+    public function edit($product);
 
     /**
      * Update the specified resource in storage.
      */
-    public function update($request, $category);
+    public function update($request, $product);
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($category);
+    public function destroy($product);
 
     public function trash();
 
-    public function restore($request, $category);
+    public function restore($request, $product);
 
-    public function kill($request, $category);
+    public function kill($request, $product);
 }

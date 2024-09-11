@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Traits;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 Trait MainTrait
@@ -8,6 +9,7 @@ Trait MainTrait
     public function mainData($pageTitle)
     {
         return [
+            'user' => Auth::user(),
             'section' => $this->mainModel::SECTION,
             'pageTitle' => $pageTitle,
         ];

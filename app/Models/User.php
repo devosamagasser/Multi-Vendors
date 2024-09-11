@@ -44,4 +44,16 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    public function profile()
+    {
+        return $this->hasOne(Profile::class)->withDefault();
+    }
+
+    public function store()
+    {
+        return $this->hasOne(Store::class)->withDefault();
+    }
+
 }

@@ -22,12 +22,10 @@
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="../../index3.html" class="nav-link">Home</a>
-            </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="#" class="nav-link">Contact</a>
-            </li>
+            <x-dashboard.links />
+            <button type="button" class="btn text-danger" data-toggle="modal" data-target="#logout">
+                logout
+            </button>
         </ul>
 
         <!-- Right navbar links -->
@@ -158,7 +156,7 @@
         <!-- Brand Logo -->
         <a href="" class="brand-link">
             <img src="{{asset('assets/dist/images/logo zag.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-            <span class="brand-text font-weight-light">Zag Eng Fanmily</span>
+            <span class="brand-text font-weight-light">Multi Vendor Store</span>
         </a>
 
         <!-- Sidebar -->
@@ -201,6 +199,30 @@
             @yield('content')
         </section>
         <!-- /.content -->
+        <div class="modal fade" id="logout">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Warning Message</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        You Are Going To leave
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <form  action="{{route('logout')}}" method="post">
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Yes , logout</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
     </div>
     <!-- /.content-wrapper -->
 

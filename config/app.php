@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
+    'currency' => 'USD',
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -213,6 +215,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
+        'Currency' => \App\Helpers\Currency::class,
     ])->toArray(),
 
 ];
