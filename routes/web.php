@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\Web\CartController;
 use App\Http\Controllers\Web\ProductsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\HomeController;
-use \App\Http\Controllers\Web;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +24,8 @@ Route::resource('products', ProductsController::class)
     ->only(['index', 'show'])
     ->parameters(['products' => 'product:slug']);
 
-
+Route::resource('cart', CartController::class)
+    ->except(['create', 'show','edit']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

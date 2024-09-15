@@ -12,6 +12,12 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
+            'App\Interfaces\Web\CartInterface',
+            'App\Repositories\Web\CartRepository',
+        );
+
+
+        $this->app->bind(
             'App\Interfaces\Dashboard\UsersInterface',
             'App\Repositories\Dashboard\UsersRepository',
         );
@@ -35,6 +41,7 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         //
     }
+
 
 
 

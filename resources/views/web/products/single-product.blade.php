@@ -48,6 +48,9 @@
                                 <a href="javascript:void(0)">{{$product->category->name}}</a></p>
                             <h3 class="price">{{Currency::format($product->price)}}@if($product->compare_price) <span>{{Currency::format($product->compare_price)}}</span>@endif</h3>
                             <p class="info-text">{{$product->description}}</p>
+                            <form action="{{route('cart.store')}}" method="post">
+                            @csrf
+                                <input type="hidden" name="product_id" value="{{$product->id}}" >
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 col-12">
                                     <div class="form-group color-option">
@@ -83,12 +86,12 @@
                                 <div class="col-lg-4 col-md-4 col-12">
                                     <div class="form-group quantity">
                                         <label for="color">Quantity</label>
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
+                                        <select class="form-control" name="quantity">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
                                         </select>
                                     </div>
                                 </div>
@@ -97,7 +100,7 @@
                                 <div class="row align-items-end">
                                     <div class="col-lg-4 col-md-4 col-12">
                                         <div class="button cart-button">
-                                            <button class="btn" style="width: 100%;">Add to Cart</button>
+                                            <button class="btn" type="submit" style="width: 100%;">Add to Cart</button>
                                         </div>
                                     </div>
                                     <div class="col-lg-4 col-md-4 col-12">
@@ -112,6 +115,8 @@
                                     </div>
                                 </div>
                             </div>
+                            </form>
+
                         </div>
                     </div>
                 </div>
