@@ -60,13 +60,19 @@
                         <td>
                             <div class="d-flex row justify-content-lg-center">
                                 <x-dashboard.model name="restore-{{$category['id']}}" status="primary" icon="fa fa-trash-restore" :action="route('dashboard.'.$data['section'].'.restore',$category['id'])" message="Are You Sure You Need To Restore {{$category->name}}" >
-                                    @method('put')
-                                    <button type="submit" class="btn btn-primary">Yes , Restore</button>
+                                    <form action="{{route('dashboard.categories.restore',$category['id'])}}" method="post">
+                                        @csrf
+                                        @method('put')
+                                        <button type="submit" class="btn btn-primary">Yes , Restore</button>
+                                    </form>
                                 </x-dashboard.model>
 
                                 <x-dashboard.model name="kill-{{$category['id']}}" status="danger" icon="fa fa-trash" :action="route('dashboard.'.$data['section'].'.kill',$category['id'])" message="Are You Sure You Need To Delete {{$category->name}} For Ever" >
-                                    @method('delete')
-                                    <button type="submit" class="btn btn-danger">Yes , Delete</button>
+                                    <form action="{{route('dashboard.categories.kill',$category['id'])}}" method="post">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="submit" class="btn btn-danger">Yes , Delete</button>
+                                    </form>
                                 </x-dashboard.model>
                             </div>
                         </td>

@@ -3,6 +3,7 @@
 namespace App\Repositories\Web;
 use App\Interfaces\Web\CartInterface;
 use App\Models\Cart;
+use App\Rules\ProductStockRules;
 use Illuminate\Support\Facades\Auth;
 
 class CartRepository implements CartInterface
@@ -25,14 +26,16 @@ class CartRepository implements CartInterface
     public function index()
     {
         $carts = $this->getItems();
-        return view('web.cart.index',compact('carts'));
+        $total = $this->total();
+        $totalBefore = $this->totalBefore();
+        return view('web.cart.index',compact('carts','total','totalBefore'));
     }
 
     public function store($request)
     {
         $validated_data = $request->validate([
             'product_id' => 'required|int|exists:products,id',
-            'quantity' => 'required|int|min:1',
+            'quantity' => ['required','int','min:1',new ProductStockRules($request->product_id)],
         ]);
 
         if(Cart::where('product_id' , $validated_data['product_id'])->exists())
@@ -49,7 +52,7 @@ class CartRepository implements CartInterface
     public function update($request, $product)
     {
         $validated_data = $request->validate([
-            'quantity' => 'required|int|min:1',
+            'quantity' => ['required','int','min:1',new ProductStockRules($product)],
         ]);
 
         Cart::where('product_id',$product)->update([
@@ -65,10 +68,9 @@ class CartRepository implements CartInterface
         return redirect()->back();
     }
 
-    public function empty($product)
+    public function empty()
     {
         Cart::query()->delete();
-        return redirect()->back();
     }
 
     public function total()
@@ -76,6 +78,14 @@ class CartRepository implements CartInterface
         $cart = $this->getItems();
         return $cart->sum(function ($item){
             return $item->quantity * $item->product->price;
+        });
+    }
+
+    public function totalBefore()
+    {
+        $cart = $this->getItems();
+        return $cart->sum(function ($item){
+            return $item->quantity * $item->product->compare_price;
         });
     }
 

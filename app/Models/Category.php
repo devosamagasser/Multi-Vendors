@@ -37,26 +37,26 @@ class Category extends Model
     public function image(): Attribute
     {
         return Attribute::make(
-            get: fn () => 'categories\\' . $this->image
+            get: fn ($value) => 'categories\\' . $value
         );
     }
 
     public static function rules()
     {
-        $id = request()->route('category');
+        $id = request()->route('category')->id;
         return [
             'name' => [
                 "required",
                 "string",
                 "max:255",
                 "unique:categories,name,$id",
-                function ($attr,$value,$fails) {
-                    if(strtolower($value) == 'laravel'){
-                        $fails('this name is forbidden!');
-                    }
-                },
-                new FilterRules(['laravel','osama']), // custom rule in rules
-                'filter:laravel,osama' // custom rule in app service provider
+//                function ($attr,$value,$fails) {
+//                    if(strtolower($value) === 'laravel'){
+//                        $fails('this name is forbidden!');
+//                    }
+//                },
+//                new FilterRules(['laravel','osama']), // custom rule in rules
+//                'filter:laravel,osama' // custom rule in app service provider
             ],
             'parent_id' => 'nullable|integer|exists:categories,id',
             'description' => 'nullable|string',

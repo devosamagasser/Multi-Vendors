@@ -12,7 +12,7 @@ interface CartInterface
 
     public function destroy($product);
 
-    public function empty($product);
+    public function empty();
 
     public function total();
 }

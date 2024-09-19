@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Web\CartController;
+use App\Http\Controllers\Web\CheckoutController;
 use App\Http\Controllers\Web\ProductsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Web\HomeController;
@@ -26,6 +27,9 @@ Route::resource('products', ProductsController::class)
 
 Route::resource('cart', CartController::class)
     ->except(['create', 'show','edit']);
+
+Route::get('/checkout',[CheckoutController::class,'index'])->name('checkout');
+Route::post('/checkout',[CheckoutController::class,'store'])->name('checkout.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

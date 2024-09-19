@@ -90,29 +90,16 @@
 
                         <div class="total-amount">
                             <div class="row">
-                                <div class="col-lg-8 col-md-6 col-12">
-                                    <div class="left">
-                                        <div class="coupon">
-                                            <form action="#" target="_blank">
-                                                <input name="Coupon" placeholder="Enter Your Coupon">
-                                                <div class="button">
-                                                    <button class="btn">Apply Coupon</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-lg-4 col-md-6 col-12">
                                     <div class="right">
                                         <ul>
-                                            <li>Cart Subtotal<span>$2560.00</span></li>
+                                            <li>Cart Subtotal<span>{{Currency::format($totalBefore)}}</span></li>
                                             <li>Shipping<span>Free</span></li>
-                                            <li>You Save<span>$29.00</span></li>
-                                            <li class="last">You Pay<span>$2531.00</span></li>
+                                            <li>You Save<span>{{Currency::format($totalBefore - $total)}}</span></li>
+                                            <li class="last">You Pay<span>{{Currency::format($total)}}</span></li>
                                         </ul>
                                         <div class="button">
-                                            <a href="checkout.html" class="btn">Checkout</a>
-                                            <a href="product-grids.html" class="btn btn-alt">Continue shopping</a>
+                                            <a href="{{route('checkout')}}" class="btn">Checkout</a>
                                         </div>
                                     </div>
                                 </div>
