@@ -110,8 +110,8 @@ return [
     |
     */
 
-//    'faker_locale' => 'en_US',
-    'faker_locale' => 'ar_eg',
+    'faker_locale' => 'en_US',
+//    'faker_locale' => 'ar_eg',
 
     /*
     |--------------------------------------------------------------------------
@@ -189,12 +189,13 @@ return [
          * Package Service Providers...
          */
         RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+        \App\Providers\FortifyServiceProvider::class,
         /*
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,

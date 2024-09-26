@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('Dashboard/index');
-})->middleware(['auth', 'verified'])->name('index');
+})->middleware(['verified'])->name('index');
 
 
 Route::namespace('\App\Http\Controllers\Dashboard\\')->group(function (){

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class Product extends Model
@@ -19,6 +20,9 @@ class Product extends Model
 
     protected $guarded = ['id','created_at','updated_at','deleted_at'];
 
+    protected $hidden = ['created_at','updated_at','deleted_at','image'];
+
+    protected $appends = ['image_url'];
 
     public function store(){
         return $this->belongsTo(Store::class,'store_id','id')->with('user');
@@ -30,18 +34,51 @@ class Product extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class,ProductTags::class,'product_id','tag_id','id','id');
     }
 
     protected static function booted(): void
     {
         static::addGlobalScope(new StoreScope());
+
+        static::creating(function(Product $product){
+            $product->slug = Str::slug($product->name);
+            $product->store_id = Auth::user()->store_id ?? 32;
+        });
     }
 
     public function scopeFilter (Builder $builder,array $filter)
     {
-        $builder->when($filter['name'] ?? false,function ($builder,$value){
-            $builder->where('products.name','LIKE',"%{$value}%");
+        $options = array_merge([
+            'name' => null,
+            'store_id' => null,
+            'category_id' => null,
+            'tag_id' => null,
+            'status' => 'active',
+        ],$filter);
+        $builder->when($options['name'],function ($builder,$value){
+            $builder->where('name','LIKE',"%{$value}%");
+        });
+        $builder->when($options['store_id'],function ($builder,$value){
+            $builder->where('store_id',$value);
+        });
+        $builder->when($options['category_id'],function ($builder,$value){
+            $builder->where('category_id',$value);
+        });
+        $builder->when($options['tag_id'],function ($builder,$value){
+
+//            $builder->whereRaw('id IN (select product_id from product_tag where tag_id = ?)',[$value]);
+            $builder->whereRaw('EXISTS (select 1 from product_tag where tag_id = ? AND product_id = products.id)',[$value]);
+//            $builder->whereExists(function ($query) use($value){
+//               $query->select(1)
+//                    ->from('product_tag')
+//                    ->whereRaw('product_id = products.id')
+//                    ->where('tag_id',$value);
+//            });
+//
+//            $builder->whereHas('tags',function ($builder) use($value){
+//               $builder->where('id',$value);
+//            });
         });
 
 //        $builder->when($filter['status'] ?? false,function ($builder,$value){

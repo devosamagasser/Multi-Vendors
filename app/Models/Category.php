@@ -17,8 +17,6 @@ class Category extends Model
     protected $fillable = ['name','parent_id','slug','description','image','status'];
 //    protected $guarded = ['id','created_at','updated_at'];
 
-    protected $appends = ['dashboard_image'];
-
     public function parent()
     {
         return $this->belongsTo(static::class,'parent_id')->withDefault(['name'=>'-']);
